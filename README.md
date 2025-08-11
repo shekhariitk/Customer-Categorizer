@@ -67,7 +67,7 @@ Access the dataset here:
 ## 🚀 Quick Start
 
 ### Clone the repo  
-git clone https://github.com/username/Customer_categorizer.git
+(https://github.com/shekhariitk/Customer-Categorizer.git)
 cd Customer_categorizer
 
 
