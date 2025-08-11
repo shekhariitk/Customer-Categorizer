@@ -140,18 +140,24 @@ docker run -d -p 5000:5000 customer-segmentation:latest
 
 ## 📁 Codebase Structure  
 
+```
 src/
-├── components/ # ML pipeline steps
-│ ├── data_ingestion.py
-│ ├── data_validation.py
-│ ├── data_transformation.py
-│ ├── data_clustering.py
-│ ├── model_trainer.py
-│ ├── model_evaluation.py
-│ └── model_pusher.py
-├── logger/ # Custom logger
-├── exception/ # Custom exceptions
-└── utils/ # Helper functions
+├── components/               # ML pipeline steps
+│   ├── data_ingestion.py       # Loads raw data from source
+│   ├── data_validation.py      # Validates data schema and quality
+│   ├── data_transformation.py  # Transforms data for modeling
+│   ├── data_clustering.py      # Applies clustering logic (e.g., KMeans)
+│   ├── model_trainer.py        # Trains ML model(s)
+│   ├── model_evaluation.py     # Evaluates model performance
+│   └── model_pusher.py         # Saves and pushes model to production
+├── logger/                   # Custom logger
+│   └── logging.py              # Handles application-wide logging
+├── exception/                # Custom exceptions
+│   └── exception.py            # Handles custom error handling
+└── utils/                    # Helper functions
+    └── utils.py                # Reusable utility functions
+```
+
 
 
 ---
@@ -159,7 +165,6 @@ src/
 ## ✅ Conclusion  
 This project empowers companies to leverage machine learning for **dynamic customer segmentation and prediction**, boosting marketing ROI through targeted campaigns and personalized experiences.
 
-👩‍💻 *Integrate with dashboards* like Power BI, Streamlit, or React for actionable business insights.
 
 ---
 
