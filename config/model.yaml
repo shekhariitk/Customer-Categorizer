@@ -1,0 +1,24 @@
+grid_search:
+  class: GridSearchCV
+  module: sklearn.model_selection
+  params:
+    cv: 3
+    verbose: 3
+model_selection:
+  module_0:
+    class: LogisticRegression
+    module: sklearn.linear_model
+    params:
+      C : 1000
+      max_iter :  500
+      penalty :  'l2'
+      solver :  'newton-cg'
+    search_param_grid:
+      C:
+      - 1000
+      max_iter : 
+      - 113
+      penalty :
+      - 'l2'
+      solver:
+      - 'newton-cg'

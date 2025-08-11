@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Customer Segmentation Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<style>
+  /* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --accent-color: #f093fb;
+    --success-color: #4facfe;
+    --warning-color: #f6d365;
+    --danger-color: #fa709a;
+    --dark-color: #2d3748;
+    --light-color: #f7fafc;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --white: #ffffff;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --box-shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: var(--gray-800);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Utility Classes */
+.text-gradient {
+    background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Navigation */
+.custom-navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+.brand-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.brand-icon {
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.brand-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.nav-subtitle {
+    color: var(--gray-500);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.stat-item i {
+    font-size: 1.25rem;
+    opacity: 0.8;
+}
+
+.hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+}
+
+.floating-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-card i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Form Section */
+.form-section {
+    padding: 4rem 0;
+    background: var(--gray-50);
+    position: relative;
+}
+
+.form-container {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--box-shadow-lg);
+    overflow: hidden;
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.form-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.form-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.progress-indicator {
+    background: rgba(255, 255, 255, 0.2);
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--accent-color);
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
+
+/* Form Styles */
+.segmentation-form {
+    padding: 2rem;
+}
+
+.form-section-group {
+    margin-bottom: 3rem;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    background: var(--gray-50);
+    transition: var(--transition);
+}
+
+.form-section-group:hover {
+    box-shadow: var(--box-shadow);
+    transform: translateY(-2px);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.section-title i {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.input-container {
+    position: relative;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+    background: var(--white);
+    color: var(--gray-800);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+.input-container.focused {
+    transform: scale(1.02);
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    font-size: 1rem;
+    transition: var(--transition);
+    pointer-events: none;
+}
+
+.form-control:focus + .input-icon,
+.input-container.focused .input-icon {
+    color: var(--primary-color);
+}
+
+/* Submit Button */
+.form-submit {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 300px;
+    justify-content: center;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.submit-btn:active {
+    transform: translateY(-1px);
+}
+
+.btn-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.submit-btn:hover .btn-shine {
+    left: 100%;
+}
+
+/* Result Section */
+.result-section {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.result-card {
+    background: linear-gradient(135deg, var(--success-color), var(--accent-color));
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.result-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); }
+}
+
+.result-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.result-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.result-cluster {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.cluster-number {
+    font-size: 3rem;
+    font-weight: 700;
+    display: block;
+    margin-top: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.result-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+.result-actions .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.result-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+.custom-footer {
+    background: var(--gray-800);
+    color: var(--gray-300);
+    padding: 2rem 0;
+    margin-top: 4rem;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.footer-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--gray-700);
+    color: var(--gray-300);
+    border-radius: 50%;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+/* Developers Section Styles */
+.developers-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 5rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.developers-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(102,126,234,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+    opacity: 0.3;
+}
+
+.developers-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.developers-section .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.developers-section .section-subtitle {
+    font-size: 1.25rem;
+    color: var(--gray-600);
+    margin-bottom: 3rem;
+    font-weight: 400;
+}
+
+/* Member Card Styles */
+.member-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.member-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.member-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.member-card:hover .member-photo {
+    transform: scale(1.1);
+}
+
+/* Photo Container */
+.member-photo-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1.5rem;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding: 4px;
+}
+
+.member-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: var(--transition);
+    background: var(--gray-200);
+}
+
+.photo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(102, 126, 234, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.member-photo-container:hover .photo-overlay {
+    opacity: 1;
+}
+
+.social-links {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+}
+
+.social-link:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+    color: white;
+}
+
+/* Member Information */
+.member-info {
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.member-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.5rem;
+}
+
+.member-role {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.member-description {
+    font-size: 0.95rem;
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+/* Skills Tags */
+.member-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: auto;
+}
+
+.skill-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: var(--transition);
+}
+
+.skill-tag:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Animation for cards */
+.member-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.member-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.member-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .developers-section {
+        padding: 3rem 0;
+    }
+    
+    .developers-section .section-title {
+        font-size: 2rem;
+    }
+    
+    .developers-section .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .member-card {
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .member-photo-container {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem;
+    }
+    
+    .member-name {
+        font-size: 1.25rem;
+    }
+    
+    .social-link {
+        width: 30px;
+        height: 30px;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .member-card {
+        padding: 1rem;
+    }
+    
+    .skill-tag {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+    }
+    
+    .member-description {
+        font-size: 0.875rem;
+    }
+}
+
+/* Alternative Layout - Side by Side Cards */
+@media (min-width: 992px) {
+    .developers-section .row {
+        display: flex;
+        align-items: stretch;
+    }
+    
+    .developers-section .col-lg-4 {
+        display: flex;
+    }
+}
+
+/* Hover Effects for the Entire Section */
+.developers-section:hover .member-card:not(:hover) {
+    opacity: 0.7;
+    transform: scale(0.95);
+}
+
+.developers-section .member-card:hover {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.02);
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .hero-stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .form-header {
+        padding: 2rem 1rem 1.5rem;
+    }
+    
+    .form-title {
+        font-size: 2rem;
+    }
+    
+    .segmentation-form {
+        padding: 1.5rem;
+    }
+    
+    .form-section-group {
+        padding: 1.5rem;
+    }
+    
+    .submit-btn {
+        min-width: 250px;
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+    }
+    
+    .result-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footer-links {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 2rem 0;
+    }
+    
+    .form-section {
+        padding: 2rem 0;
+    }
+    
+    .form-container {
+        margin: 1rem;
+        border-radius: 15px;
+    }
+    
+    .form-control {
+        padding: 0.75rem 0.875rem 0.75rem 2.75rem;
+    }
+    
+    .input-icon {
+        left: 0.875rem;
+        font-size: 0.875rem;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-up {
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading States */
+.form-control.loading {
+    background-image: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    background-size: 200px 100%;
+    background-repeat: no-repeat;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: -200px 0; }
+    100% { background-position: 200px 0; }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --white: #1f2937;
+        --gray-50: #374151;
+        --gray-100: #4b5563;
+        --gray-200: #6b7280;
+        --light-color: #1f2937;
+        --dark-color: #f9fafb;
+    }
+}
+
+</style>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg custom-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <div class="brand-container">
+                    <i class="fas fa-chart-pie brand-icon"></i>
+                    <span class="brand-text">CustomerAI</span>
+                </div>
+            </a>
+            <div class="nav-items">
+                <span class="nav-subtitle">Advanced Analytics Platform</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Customer Segmentation <span class="text-gradient">Analytics</span></h1>
+                        <p class="hero-subtitle">Leverage AI-powered insights to understand your customer behavior and drive targeted marketing strategies.</p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <span>Precise Segmentation</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-brain"></i>
+                                <span>AI-Powered Analysis</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-visual">
+                        <div class="floating-card">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Real-time Analytics</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Form Section -->
+    <section class="form-section">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2 class="form-title">Customer Profile Analysis</h2>
+                    <p class="form-subtitle">Enter customer information to generate intelligent segmentation insights</p>
+                    <div class="progress-indicator">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+
+                <form action="/" method="post" class="segmentation-form">
+                    <!-- Personal Information Section -->
+                    <div class="form-section-group">
+                        <h3 class="section-title">
+                            <i class="fas fa-user"></i>
+                            Personal Information
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Age" class="form-label">Age</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Age" name="Age" placeholder="Enter age" required>
+                                        <i class="fas fa-calendar-alt input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Education" class="form-label">Education Level</label>
+                                    <div class="input-container">
+                                        <select class="form-control" id="Education" name="Education" required>
+                                            <option value="" disabled selected>Select education level</option>
+                                            <option value="0">Basic Education</option>
+                                            <option value="1">Secondary Education</option>
+                                            <option value="2">Graduation</option>
+                                            <option value="3">Master's Degree</option>
+                                            <option value="4">PhD</option>
+                                        </select>
+                                        <i class="fas fa-graduation-cap input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="Marital_Status" class="form-label">Marital Status</label>
+                                    <div class="input-container">
+                                        <select class="form-control" id="Marital_Status" name="Marital_Status" required>
+                                            <option value="" disabled selected>Select status</option>
+                                            <option value="0">Single</option>
+                                            <option value="1">Married</option>
+                                        </select>
+                                        <i class="fas fa-heart input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="Parental_Status" class="form-label">Has Children</label>
+                                    <div class="input-container">
+                                        <select class="form-control" id="Parental_Status" name="Parental_Status" required>
+                                            <option value="" disabled selected>Has children?</option>
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                        </select>
+                                        <i class="fas fa-baby input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="Children" class="form-label">Number of Children</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Children" name="Children" placeholder="0" required>
+                                        <i class="fas fa-child input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Information Section -->
+                    <div class="form-section-group">
+                        <h3 class="section-title">
+                            <i class="fas fa-dollar-sign"></i>
+                            Financial Profile
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Income" class="form-label">Annual Income</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Income" name="Income" placeholder="Enter annual income" required>
+                                        <i class="fas fa-money-bill-wave input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Total_Spending" class="form-label">Total Spending</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Total_Spending" name="Total_Spending" placeholder="Total spending amount" required>
+                                        <i class="fas fa-credit-card input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customer Behavior Section -->
+                    <div class="form-section-group">
+                        <h3 class="section-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Customer Behavior
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Days_as_Customer" class="form-label">Days as Customer</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Days_as_Customer" name="Days_as_Customer" placeholder="Days since joining" required>
+                                        <i class="fas fa-clock input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Recency" class="form-label">Days Since Last Purchase</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Recency" name="Recency" placeholder="Days since last purchase" required>
+                                        <i class="fas fa-shopping-bag input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Spending Section -->
+                    <div class="form-section-group">
+                        <h3 class="section-title">
+                            <i class="fas fa-shopping-cart"></i>
+                            Product Spending (Last 2 Years)
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="Wines" class="form-label">Wine</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Wines" name="Wines" placeholder="Amount spent" required>
+                                        <i class="fas fa-wine-glass input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="Fruits" class="form-label">Fruits</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Fruits" name="Fruits" placeholder="Amount spent" required>
+                                        <i class="fas fa-apple-alt input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="Meat" class="form-label">Meat</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Meat" name="Meat" placeholder="Amount spent" required>
+                                        <i class="fas fa-drumstick-bite input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="Fish" class="form-label">Fish</label>
+                                    <div class="input-container">
+                                        <input type="number" step="0.01" class="form-control" id="Fish" name="Fish" placeholder="Amount spent" required>
+                                        <i class="fas fa-fish input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="Sweets" class="form-label">Sweets</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Sweets" name="Sweets" placeholder="Amount spent" required>
+                                        <i class="fas fa-candy-cane input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="Gold" class="form-label">Gold</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Gold" name="Gold" placeholder="Amount spent" required>
+                                        <i class="fas fa-coins input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Purchase Channels Section -->
+                    <div class="form-section-group">
+                        <h3 class="section-title">
+                            <i class="fas fa-store"></i>
+                            Purchase Channels
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="Web" class="form-label">Web Purchases</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Web" name="Web" placeholder="Number" required>
+                                        <i class="fas fa-globe input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="Catalog" class="form-label">Catalog Purchases</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Catalog" name="Catalog" placeholder="Number" required>
+                                        <i class="fas fa-book input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="Store" class="form-label">Store Purchases</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Store" name="Store" placeholder="Number" required>
+                                        <i class="fas fa-store-alt input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="Discount_Purchases" class="form-label">Discount Purchases</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Discount_Purchases" name="Discount_Purchases" placeholder="Number" required>
+                                        <i class="fas fa-percentage input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Engagement Section -->
+                    <div class="form-section-group">
+                        <h3 class="section-title">
+                            <i class="fas fa-chart-line"></i>
+                            Engagement Metrics
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Total_Promo" class="form-label">Promotions Accepted</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="Total_Promo" name="Total_Promo" placeholder="Number of promotions" required>
+                                        <i class="fas fa-tags input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="NumWebVisitsMonth" class="form-label">Monthly Web Visits</label>
+                                    <div class="input-container">
+                                        <input type="number" class="form-control" id="NumWebVisitsMonth" name="NumWebVisitsMonth" placeholder="Visits last month" required>
+                                        <i class="fas fa-mouse-pointer input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-submit">
+                        <button type="submit" class="btn btn-primary submit-btn">
+                            <i class="fas fa-chart-pie"></i>
+                            Generate Customer Segment Analysis
+                            <div class="btn-shine"></div>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Result Section -->
+                {% if context %}
+                <div class="result-section">
+                    <div class="result-card">
+                        <div class="result-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3 class="result-title">Analysis Complete</h3>
+                        <div class="result-cluster">
+                            Customer Segment: <span class="cluster-number">{{ context }}</span>
+                        </div>
+                        <div class="result-actions">
+                            <button class="btn btn-outline-primary">
+                                <i class="fas fa-download"></i>
+                                Export Report
+                            </button>
+                            <button class="btn btn-outline-secondary">
+                                <i class="fas fa-chart-bar"></i>
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    <!-- Developers Details -->
+    <!-- Developers Details -->
+    <section class="developers-section">
+      <div class="container">
+          <div class="text-center mb-5">
+              <h2 class="section-title">Developed by CustomerAI Team</h2>
+              <p class="section-subtitle">Empowering businesses with AI-driven customer insights.</p>
+          </div>
+          <div class="row justify-content-center">
+              <!-- Developer 1 - First Column -->
+              <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
+                  <div class="member-card">
+                      <div class="member-photo-container">
+                          <img src="static/images/developer1.jpg" alt="Ankit Saluja" class="member-photo">
+                          <div class="photo-overlay">
+                              <div class="social-links">
+                                  <a href="https://www.linkedin.com/in/ankit-saluja-1046a632b/" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                  <a href="https://github.com/ankit-iitk" class="social-link"><i class="fab fa-github"></i></a>
+                                  <a href="https://ankit-iitk.github.io/MyPortfolio/" class="social-link"><i class="fab fa-user"></i></a>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="member-info">
+                          <h3 class="member-name">Ankit Saluja</h3>
+                          <p class="member-role">Aspiring Data Scientist</p>
+                          <p class="member-description">Specializes in machine learning algorithms and predictive analytics for customer behavior analysis.</p>
+                          <div class="member-skills">
+                              <span class="skill-tag">Python</span>
+                              <span class="skill-tag">Machine Learning</span>
+                              <span class="skill-tag">Deep Learning</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              
+              <!-- Developer 2 - Second Column -->
+              <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
+                  <div class="member-card">
+                      <div class="member-photo-container">
+                          <img src="static/images/developer2.jpg" alt="Shekhar Suman" class="member-photo">
+                          <div class="photo-overlay">
+                              <div class="social-links">
+                                  <a href="https://www.linkedin.com/in/shekhar-suman-pathak/" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                  <a href="https://github.com/shekhariitk" class="social-link"><i class="fab fa-github"></i></a>
+                                  <a href="https://shekhariitk.github.io/shekhar-portfolio/" class="social-link"><i class="fab fa-user"></i></a>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="member-info">
+                          <h3 class="member-name">Shekhar Suman</h3>
+                          <p class="member-role">Aspiring Machine Learning Engineer</p>
+                          <p class="member-description">Expert in building scalable ML systems and deploying AI models for real-time customer segmentation.</p>
+                          <div class="member-skills">
+                              <span class="skill-tag">ML Engineering</span>
+                              <span class="skill-tag">AWS</span>
+                              <span class="skill-tag">Docker</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="custom-footer">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p>&copy; 2025 CustomerAI Analytics. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Form interactions
+        $(document).ready(function() {
+            // Input focus effects
+            $('.form-control').focus(function() {
+                $(this).closest('.input-container').addClass('focused');
+            }).blur(function() {
+                $(this).closest('.input-container').removeClass('focused');
+            });
+
+            // Progress indicator
+            let totalFields = $('.form-control').length;
+            let filledFields = 0;
+
+            $('.form-control').on('input change', function() {
+                filledFields = $('.form-control').filter(function() {
+                    return $(this).val() !== '';
+                }).length;
+                
+                let progress = (filledFields / totalFields) * 100;
+                $('.progress-bar').css('width', progress + '%');
+            });
+
+            // Smooth scrolling for form sections
+            $('.section-title').click(function() {
+                $(this).parent().toggleClass('collapsed');
+            });
+        });
+    </script>
+</body>
+</html>
