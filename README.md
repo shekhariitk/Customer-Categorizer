@@ -23,6 +23,7 @@ Dataset used
 3. Machine learning algorithms
 4. Docker
 5. MongoDB
+6. AWS
 
 ## Infrastructure required
 
