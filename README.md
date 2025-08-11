@@ -1,168 +1,168 @@
+# 🛍️ Customer Personality Segmentation
 
-# Customer Personality Segmentation
+[![Python](https://img.shields.io/badge/python-3.7-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![AWS](https://img.shields.io/badge/AWS-232F3E?logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-## Problem statement
+---
 
-In this data science project, you will build a machine learning system which will be able predict the personality of the customer using machine learning algorithms. This project will be very usefull for malls, various stores and companies which are product based. Based on customer's personal details and purchase details, we can cluster them and we can predict the customer's cluster number using classification techniques.
+## 📌 Overview  
+In today’s competitive retail landscape, understanding customer personalities is key to delivering personalized experiences and targeted marketing strategies. This project harnesses machine learning for **Customer Personality Segmentation** by clustering users based on demographics and purchase behavior, then **predicting their segment dynamically** to serve real-time insights.
 
-## Solution Proposed
+Use cases include:  
+- 🎯 Personalized marketing campaigns  
+- 📈 Enhanced customer retention  
+- 🚀 Optimized product recommendations  
 
-Now the question is how to dynamically predict the cluster of the customer ?. One of the approaches which we can use of machine learning approach, where we can cluster the customer based on the details we have and predict the cluster type based on the domain knowledge and leverage previous customer data to predict the cluster.
+---
 
-Dataset used
- <html>
-<a href="https://github.com/entbappy/Branching-tutorial/blob/master/marketing_campaign.zip"> Dataset Link</a>
-</html>
+## 🎯 Problem Statement  
+Handling large-scale customer data — including demographics and purchase histories — presents a challenge in effectively segmenting customers for better marketing and service.
+
+Goal:  
+> Efficiently cluster customers into meaningful groups and build a predictive system to classify new customers instantly.
+
+Hybrid approach:  
+- **Unsupervised learning:** K-Means clustering to identify natural customer groups  
+- **Supervised learning:** Logistic Regression for real-time cluster prediction  
+
+---
+
+## 💡 Proposed Solution  
+1. Cluster customers with **K-Means** based on their traits and purchase data.  
+2. Label each cluster with business-relevant insights.  
+3. Train a **Logistic Regression** classifier to predict clusters of new customers.  
+4. Deploy the solution as a **FastAPI microservice**, using **MongoDB Atlas** for storage and **AWS** for cloud infrastructure.
+
+---
+
+## 📂 Dataset  
+Access the dataset here:  
+[Marketing Campaign Dataset](https://github.com/entbappy/Branching-tutorial/blob/master/marketing_campaign.zip)  
+
+---
+
+## 🛠 Tech Stack  
+- **Python 3.7**  
+- Frameworks: FastAPI, Scikit-learn, Pandas, NumPy  
+- Database: MongoDB Atlas  
+- Cloud: AWS (S3), Azure  
+- CI/CD: GitHub Actions  
+- Containerization: Docker  
+- Model tuning: GridSearchCV  
+
+---
+
+## 🏗 Infrastructure  
+- AWS S3 bucket (for data/model storage)  
+- MongoDB Atlas database  
+- Azure / AWS EC2 for deployment  
+- GitHub Actions for CI/CD pipelines  
+
+---
+
+## 🚀 Quick Start
+
+### Clone the repo  
+git clone https://github.com/username/Customer_categorizer.git
+cd Customer_categorizer
 
 
-
-## Tech Stack Used
-
-1. Python
-2. FastAPI
-3. Machine learning algorithms
-4. Docker
-5. MongoDB
-6. AWS
-
-## Infrastructure required
-
-1. AWS S3
-2. Azure
-3. Github Actions
-
-## How to run
-
-Before you run this project make sure you have MongoDB Atlas account and you have the shipping dataset into it.
-
-Step 1. Cloning the repository.
-
-```
-
-git clone https://github.com/Machine-Learning-01/Customer_segmentation.git
-
-```
-
-Step 2. Create a conda environment.
-
-```
-
-conda create --prefix venv python=3.7 -y
-
-```
-
-```
-
+### Prepare environment  
+conda create --prefix venv python=3.10 -y
 conda activate venv/
-
-```
-
-Step 3. Install the requirements
-
-```
-
 pip install -r requirements.txt
 
-```
 
-Step 4. Export the environment variable
-
-```bash
-
-export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
-
-
-export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
+### Set environment variables  
+export AWS_ACCESS_KEY_ID=<your_aws_access_key>
+export AWS_SECRET_ACCESS_KEY=<your_aws_secret_key>
+export AWS_DEFAULT_REGION=<your_aws_region>
+export MONGODB_URL=<your_mongodb_connection_string>
 
 
-export AWS_DEFAULT_REGION=<AWS_DEFAULT_REGION>
-
-
-export MONGODB_URL= <MONGODB_URL>
-
-
-```
-
-Step 5. Run the application server
-
-```
-
+### Run the app  
 python app.py
 
-```
 
-Step 6. Train application
-
-```bash
-
+### Train model  
+Open in browser or send GET request:  
 http://localhost:5000/train
 
-```
 
-Step 7. Prediction application
-
-```bash
-
+### Predict cluster  
 http://localhost:5000/predict
 
-```
 
-## Run locally
+---
 
-1. Check if the Dockerfile is available in the project directory
-2. Build the Docker image
+## 🐳 Docker Instructions
 
-```
+### Build image  
+ docker build \
+   --build-arg AWS_ACCESS_KEY_ID=<your_aws_access_key> \
+   --build-arg AWS_SECRET_ACCESS_KEY=<your_aws_secret_key> \
+   --build-arg AWS_DEFAULT_REGION=<your_aws_region> \
+   --build-arg MONGODB_URL=<your_mongodb_connection_string> \
+   -t customer-segmentation:latest .
 
-docker build --build-arg AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID> --build-arg AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY> --build-arg AWS_DEFAULT_REGION=<AWS_DEFAULT_REGION> --build-arg MONGODB_URL=<MONGODB_URL> . 
 
-```
 
-3. Run the Docker image
+### Run container  
+docker run -d -p 5000:5000 customer-segmentation:latest
 
-```
 
-docker run -d -p 5000:5000 <IMAGE_NAME>
+---
 
-```
+## 🗺️ Architecture Visuals
 
-## Project Architecture -
+### Project Workflow  
+![Project Architecture](https://user-images.githubusercontent.com/71321529/192722336-54016f79-89ef-4c8c-9d71-a6e91ebab03f.jpeg)
 
-![WhatsApp Image 2022-09-22 at 15 29 19](https://user-images.githubusercontent.com/71321529/192722336-54016f79-89ef-4c8c-9d71-a6e91ebab03f.jpeg)
+### Data Collection Flow  
+![Data Collection](https://user-images.githubusercontent.com/71321529/192721926-de265f9b-f301-4943-ac7d-948bff7be9a0.jpeg)
 
-## Data Collection Architecture -
+### Deployment Pipeline  
+![Deployment](https://user-images.githubusercontent.com/104005791/199660875-c8e63457-432a-44cb-8a95-800870f3da15.png)
 
-![WhatsApp Image 2022-09-22 at 15 29 10](https://user-images.githubusercontent.com/71321529/192721926-de265f9b-f301-4943-ac7d-948bff7be9a0.jpeg)
+---
 
-## Deployment Architecture -
+## 📊 Models Used  
+- **K-Means** for customer segmentation  
+- **Logistic Regression** for cluster prediction  
 
-![deployment](https://user-images.githubusercontent.com/104005791/199660875-c8e63457-432a-44cb-8a95-800870f3da15.png)
+**Extras:** Hyperparameter tuning with GridSearchCV
 
-## Models Used
+---
 
-* [K-Means](https://www.javatpoint.com/k-means-clustering-algorithm-in-machine-learning)
-* [LogisticRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html)
+## 📁 Codebase Structure  
 
-From these above models after hyperparameter optimization we selected these two models which were K-Means for clustering and Logistic Regression for classification and used the following in Pipeline.
+src/
+├── components/ # ML pipeline steps
+│ ├── data_ingestion.py
+│ ├── data_validation.py
+│ ├── data_transformation.py
+│ ├── data_clustering.py
+│ ├── model_trainer.py
+│ ├── model_evaluation.py
+│ └── model_pusher.py
+├── logger/ # Custom logger
+├── exception/ # Custom exceptions
+└── utils/ # Helper functions
 
-* GridSearchCV is used for Hyperparameter Optimization in the pipeline.
 
-## `src` is the main package folder which contains
+---
 
-**Components** : Contains all components of Machine Learning Project
+## ✅ Conclusion  
+This project empowers companies to leverage machine learning for **dynamic customer segmentation and prediction**, boosting marketing ROI through targeted campaigns and personalized experiences.
 
-- Data Ingestion
-- Data Validation
-- Data Transformation
-- Data Clustering
-- Model Trainer
-- Model Evaluation
-- Model Pusher
+👩‍💻 *Integrate with dashboards* like Power BI, Streamlit, or React for actionable business insights.
 
-**Custom Logger and Exceptions** are used in the Project for better debugging purposes.
+---
 
-## Conclusion
-
-- This Project can be used in real-life by Users.
+Feel free to reach out for more enhancements or add-ons to make this project even more impactful! 🚀
 
 
